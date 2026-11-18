@@ -1,0 +1,426 @@
+package com.xignsys.pace.fixtures
+
+/**
+ * Published elliptic curve vectors: the Brainpool domain parameters of RFC 5639, section 3, and the ECDH test vectors
+ * of RFC 7027, Appendix A (brainpoolP256r1 and Appendix A.1 are in `EcDomainTest`); the NIST curves of RFC 5114,
+ * sections 2.4 to 2.8, and its ECDH test vectors, Appendix A.4 to A.8. Each value is copied from the text of the RFC.
+ */
+internal object CurveVectors {
+    /** The domain parameters `p`, `A`, `B`, `x`, `y` and `q` (RFC 5114: `n`) of one curve, as hex strings. */
+    class Curve(
+        val name: String,
+        val p: String,
+        val a: String,
+        val b: String,
+        val x: String,
+        val y: String,
+        val q: String,
+    ) {
+        override fun toString(): String = name
+    }
+
+    /** The ECDH test vector of one curve (RFC 7027 and RFC 5114, Appendix A), as hex strings. */
+    class KeyAgreement(
+        val curve: String,
+        val dA: String,
+        val xQA: String,
+        val yQA: String,
+        val dB: String,
+        val xQB: String,
+        val yQB: String,
+        val xZ: String,
+    ) {
+        override fun toString(): String = curve
+    }
+
+    /** RFC 5639, section 3.2: brainpoolP192r1. */
+    val BRAINPOOL_P192R1: Curve =
+        Curve(
+            name = "brainpoolP192r1",
+            p =
+                "C302F41D 932A36CD A7A34630 93D18DB7 8FCE476D E1A86297",
+            a =
+                "6A911740 76B1E0E1 9C39C031 FE8685C1 CAE040E5 C69A28EF",
+            b =
+                "469A28EF 7C28CCA3 DC721D04 4F4496BC CA7EF414 6FBF25C9",
+            x =
+                "C0A0647E AAB6A487 53B033C5 6CB0F090 0A2F5C48 53375FD6",
+            y =
+                "14B69086 6ABD5BB8 8B5F4828 C1490002 E6773FA2 FA299B8F",
+            q =
+                "C302F41D 932A36CD A7A3462F 9E9E916B 5BE8F102 9AC4ACC1",
+        )
+
+    /** RFC 5639, section 3.3: brainpoolP224r1. */
+    val BRAINPOOL_P224R1: Curve =
+        Curve(
+            name = "brainpoolP224r1",
+            p =
+                "D7C134AA 26436686 2A183025 75D1D787 B09F0757 97DA89F5 7EC8C0FF",
+            a =
+                "68A5E62C A9CE6C1C 299803A6 C1530B51 4E182AD8 B0042A59 CAD29F43",
+            b =
+                "2580F63C CFE44138 870713B1 A92369E3 3E2135D2 66DBB372 386C400B",
+            x =
+                "0D9029AD 2C7E5CF4 340823B2 A87DC68C 9E4CE317 4C1E6EFD EE12C07D",
+            y =
+                "58AA56F7 72C0726F 24C6B89E 4ECDAC24 354B9E99 CAA3F6D3 761402CD",
+            q =
+                "D7C134AA 26436686 2A183025 75D0FB98 D116BC4B 6DDEBCA3 A5A7939F",
+        )
+
+    /** RFC 5639, section 3.5: brainpoolP320r1. */
+    val BRAINPOOL_P320R1: Curve =
+        Curve(
+            name = "brainpoolP320r1",
+            p =
+                "D35E4720 36BC4FB7 E13C785E D201E065 F98FCFA6 F6F40DEF 4F92B9EC 7893EC28 " +
+                    "FCD412B1 F1B32E27",
+            a =
+                "3EE30B56 8FBAB0F8 83CCEBD4 6D3F3BB8 A2A73513 F5EB79DA 66190EB0 85FFA9F4 " +
+                    "92F375A9 7D860EB4",
+            b =
+                "52088394 9DFDBC42 D3AD1986 40688A6F E13F4134 9554B49A CC31DCCD 88453981 " +
+                    "6F5EB4AC 8FB1F1A6",
+            x =
+                "43BD7E9A FB53D8B8 5289BCC4 8EE5BFE6 F20137D1 0A087EB6 E7871E2A 10A599C7 " +
+                    "10AF8D0D 39E20611",
+            y =
+                "14FDD055 45EC1CC8 AB409324 7F77275E 0743FFED 117182EA A9C77877 AAAC6AC7 " +
+                    "D35245D1 692E8EE1",
+            q =
+                "D35E4720 36BC4FB7 E13C785E D201E065 F98FCFA5 B68F12A3 2D482EC7 EE8658E9 " +
+                    "8691555B 44C59311",
+        )
+
+    /** RFC 5639, section 3.6: brainpoolP384r1. */
+    val BRAINPOOL_P384R1: Curve =
+        Curve(
+            name = "brainpoolP384r1",
+            p =
+                "8CB91E82 A3386D28 0F5D6F7E 50E641DF 152F7109 ED5456B4 12B1DA19 7FB71123 " +
+                    "ACD3A729 901D1A71 87470013 3107EC53",
+            a =
+                "7BC382C6 3D8C150C 3C72080A CE05AFA0 C2BEA28E 4FB22787 139165EF BA91F90F " +
+                    "8AA5814A 503AD4EB 04A8C7DD 22CE2826",
+            b =
+                "04A8C7DD 22CE2826 8B39B554 16F0447C 2FB77DE1 07DCD2A6 2E880EA5 3EEB62D5 " +
+                    "7CB43902 95DBC994 3AB78696 FA504C11",
+            x =
+                "1D1C64F0 68CF45FF A2A63A81 B7C13F6B 8847A3E7 7EF14FE3 DB7FCAFE 0CBD10E8 " +
+                    "E826E034 36D646AA EF87B2E2 47D4AF1E",
+            y =
+                "8ABE1D75 20F9C2A4 5CB1EB8E 95CFD552 62B70B29 FEEC5864 E19C054F F9912928 " +
+                    "0E464621 77918111 42820341 263C5315",
+            q =
+                "8CB91E82 A3386D28 0F5D6F7E 50E641DF 152F7109 ED5456B3 1F166E6C AC0425A7 " +
+                    "CF3AB6AF 6B7FC310 3B883202 E9046565",
+        )
+
+    /** RFC 5639, section 3.7: brainpoolP512r1. */
+    val BRAINPOOL_P512R1: Curve =
+        Curve(
+            name = "brainpoolP512r1",
+            p =
+                "AADD9DB8 DBE9C48B 3FD4E6AE 33C9FC07 CB308DB3 B3C9D20E D6639CCA 70330871 " +
+                    "7D4D9B00 9BC66842 AECDA12A E6A380E6 2881FF2F 2D82C685 28AA6056 583A48F3",
+            a =
+                "7830A331 8B603B89 E2327145 AC234CC5 94CBDD8D 3DF91610 A83441CA EA9863BC " +
+                    "2DED5D5A A8253AA1 0A2EF1C9 8B9AC8B5 7F1117A7 2BF2C7B9 E7C1AC4D 77FC94CA",
+            b =
+                "3DF91610 A83441CA EA9863BC 2DED5D5A A8253AA1 0A2EF1C9 8B9AC8B5 7F1117A7 " +
+                    "2BF2C7B9 E7C1AC4D 77FC94CA DC083E67 984050B7 5EBAE5DD 2809BD63 8016F723",
+            x =
+                "81AEE4BD D82ED964 5A21322E 9C4C6A93 85ED9F70 B5D916C1 B43B62EE F4D0098E " +
+                    "FF3B1F78 E2D0D48D 50D1687B 93B97D5F 7C6D5047 406A5E68 8B352209 BCB9F822",
+            y =
+                "7DDE385D 566332EC C0EABFA9 CF7822FD F209F700 24A57B1A A000C55B 881F8111 " +
+                    "B2DCDE49 4A5F485E 5BCA4BD8 8A2763AE D1CA2B2F A8F05406 78CD1E0F 3AD80892",
+            q =
+                "AADD9DB8 DBE9C48B 3FD4E6AE 33C9FC07 CB308DB3 B3C9D20E D6639CCA 70330870 " +
+                    "553E5C41 4CA92619 41866119 7FAC1047 1DB1D381 085DDADD B5879682 9CA90069",
+        )
+
+    /** RFC 7027, Appendix A.2: ECDH on brainpoolP384r1. */
+    val RFC_7027_A2: KeyAgreement =
+        KeyAgreement(
+            curve = "brainpoolP384r1",
+            dA =
+                "1E20F5E0 48A5886F 1F157C74 E91BDE2B 98C8B52D 58E5003D 57053FC4 B0BD65D6 " +
+                    "F15EB5D1 EE1610DF 87079514 3627D042",
+            xQA =
+                "68B665DD 91C19580 0650CDD3 63C625F4 E742E813 4667B767 B1B47679 3588F885 " +
+                    "AB698C85 2D4A6E77 A252D638 0FCAF068",
+            yQA =
+                "55BC91A3 9C9EC01D EE36017B 7D673A93 1236D2F1 F5C83942 D049E3FA 20607493 " +
+                    "E0D038FF 2FD30C2A B67D15C8 5F7FAA59",
+            dB =
+                "032640BC 6003C592 60F7250C 3DB58CE6 47F98E12 60ACCE4A CDA3DD86 9F74E01F " +
+                    "8BA5E032 4309DB6A 9831497A BAC96670",
+            xQB =
+                "4D44326F 269A597A 5B58BBA5 65DA5556 ED7FD9A8 A9EB76C2 5F46DB69 D19DC8CE " +
+                    "6AD18E40 4B15738B 2086DF37 E71D1EB4",
+            yQB =
+                "62D69213 6DE56CBE 93BF5FA3 188EF58B C8A3A0EC 6C1E151A 21038A42 E9185329 " +
+                    "B5B27590 3D192F8D 4E1F32FE 9CC78C48",
+            xZ =
+                "0BD9D3A7 EA0B3D51 9D09D8E4 8D0785FB 744A6B35 5E6304BC 51C229FB BCE239BB " +
+                    "ADF64037 15C35D4F B2A5444F 575D4F42",
+        )
+
+    /** RFC 7027, Appendix A.3: ECDH on brainpoolP512r1. */
+    val RFC_7027_A3: KeyAgreement =
+        KeyAgreement(
+            curve = "brainpoolP512r1",
+            dA =
+                "16302FF0 DBBB5A8D 733DAB71 41C1B45A CBC87159 39677F6A 56850A38 BD87BD59 " +
+                    "B09E8027 9609FF33 3EB9D4C0 61231FB2 6F92EEB0 4982A5F1 D1764CAD 57665422",
+            xQA =
+                "0A420517 E406AAC0 ACDCE90F CD714877 18D3B953 EFD7FBEC 5F7F27E2 8C614999 " +
+                    "9397E91E 029E0645 7DB2D3E6 40668B39 2C2A7E73 7A7F0BF0 4436D116 40FD09FD",
+            yQA =
+                "72E6882E 8DB28AAD 36237CD2 5D580DB2 3783961C 8DC52DFA 2EC138AD 472A0FCE " +
+                    "F3887CF6 2B623B2A 87DE5C58 8301EA3E 5FC269B3 73B60724 F5E82A6A D147FDE7",
+            dB =
+                "230E18E1 BCC88A36 2FA54E4E A3902009 292F7F80 33624FD4 71B5D8AC E49D12CF " +
+                    "ABBC1996 3DAB8E2F 1EBA00BF FB29E4D7 2D13F222 4562F405 CB805036 66B25429",
+            xQB =
+                "9D45F66D E5D67E2E 6DB6E93A 59CE0BB4 8106097F F78A081D E781CDB3 1FCE8CCB " +
+                    "AAEA8DD4 320C4119 F1E9CD43 7A2EAB37 31FA9668 AB268D87 1DEDA55A 5473199F",
+            yQB =
+                "2FDC3130 95BCDD5F B3A91636 F07A959C 8E86B563 6A1E930E 8396049C B481961D " +
+                    "365CC114 53A06C71 9835475B 12CB52FC 3C383BCE 35E27EF1 94512B71 876285FA",
+            xZ =
+                "A7927098 655F1F99 76FA50A9 D566865D C5303318 46381C87 256BAF32 26244B76 " +
+                    "D36403C0 24D7BBF0 AA0803EA FF405D3D 24F11A9B 5C0BEF67 9FE1454B 21C4CD1F",
+        )
+
+    /** RFC 5114, section 2.4: the 192-bit random ECP group, NIST secp192r1. */
+    val NIST_P192: Curve =
+        Curve(
+            name = "secp192r1",
+            p =
+                "FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE FFFFFFFF FFFFFFFF",
+            a =
+                "FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE FFFFFFFF FFFFFFFC",
+            b =
+                "64210519 E59C80E7 0FA7E9AB 72243049 FEB8DEEC C146B9B1",
+            x =
+                "188DA80E B03090F6 7CBF20EB 43A18800 F4FF0AFD 82FF1012",
+            y =
+                "07192B95 FFC8DA78 631011ED 6B24CDD5 73F977A1 1E794811",
+            q =
+                "FFFFFFFF FFFFFFFF FFFFFFFF 99DEF836 146BC9B1 B4D22831",
+        )
+
+    /** RFC 5114, section 2.5: the 224-bit random ECP group, NIST secp224r1. */
+    val NIST_P224: Curve =
+        Curve(
+            name = "secp224r1",
+            p =
+                "FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF 00000000 00000000 00000001",
+            a =
+                "FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE FFFFFFFF FFFFFFFF FFFFFFFE",
+            b =
+                "B4050A85 0C04B3AB F5413256 5044B0B7 D7BFD8BA 270B3943 2355FFB4",
+            x =
+                "B70E0CBD 6BB4BF7F 321390B9 4A03C1D3 56C21122 343280D6 115C1D21",
+            y =
+                "BD376388 B5F723FB 4C22DFE6 CD4375A0 5A074764 44D58199 85007E34",
+            q =
+                "FFFFFFFF FFFFFFFF FFFFFFFF FFFF16A2 E0B8F03E 13DD2945 5C5C2A3D",
+        )
+
+    /** RFC 5114, section 2.6: the 256-bit random ECP group, NIST secp256r1. */
+    val NIST_P256: Curve =
+        Curve(
+            name = "secp256r1",
+            p =
+                "FFFFFFFF 00000001 00000000 00000000 00000000 FFFFFFFF FFFFFFFF FFFFFFFF",
+            a =
+                "FFFFFFFF 00000001 00000000 00000000 00000000 FFFFFFFF FFFFFFFF FFFFFFFC",
+            b =
+                "5AC635D8 AA3A93E7 B3EBBD55 769886BC 651D06B0 CC53B0F6 3BCE3C3E 27D2604B",
+            x =
+                "6B17D1F2 E12C4247 F8BCE6E5 63A440F2 77037D81 2DEB33A0 F4A13945 D898C296",
+            y =
+                "4FE342E2 FE1A7F9B 8EE7EB4A 7C0F9E16 2BCE3357 6B315ECE CBB64068 37BF51F5",
+            q =
+                "FFFFFFFF 00000000 FFFFFFFF FFFFFFFF BCE6FAAD A7179E84 F3B9CAC2 FC632551",
+        )
+
+    /** RFC 5114, section 2.7: the 384-bit random ECP group, NIST secp384r1. */
+    val NIST_P384: Curve =
+        Curve(
+            name = "secp384r1",
+            p =
+                "FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE " +
+                    "FFFFFFFF 00000000 00000000 FFFFFFFF",
+            a =
+                "FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE " +
+                    "FFFFFFFF 00000000 00000000 FFFFFFFC",
+            b =
+                "B3312FA7 E23EE7E4 988E056B E3F82D19 181D9C6E FE814112 0314088F 5013875A " +
+                    "C656398D 8A2ED19D 2A85C8ED D3EC2AEF",
+            x =
+                "AA87CA22 BE8B0537 8EB1C71E F320AD74 6E1D3B62 8BA79B98 59F741E0 82542A38 " +
+                    "5502F25D BF55296C 3A545E38 72760AB7",
+            y =
+                "3617DE4A 96262C6F 5D9E98BF 9292DC29 F8F41DBD 289A147C E9DA3113 B5F0B8C0 " +
+                    "0A60B1CE 1D7E819D 7A431D7C 90EA0E5F",
+            q =
+                "FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF C7634D81 F4372DDF " +
+                    "581A0DB2 48B0A77A ECEC196A CCC52973",
+        )
+
+    /** RFC 5114, section 2.8: the 521-bit random ECP group, NIST secp521r1. */
+    val NIST_P521: Curve =
+        Curve(
+            name = "secp521r1",
+            p =
+                "000001FF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF " +
+                    "FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF " +
+                    "FFFFFFFF",
+            a =
+                "000001FF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF " +
+                    "FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF " +
+                    "FFFFFFFC",
+            b =
+                "00000051 953EB961 8E1C9A1F 929A21A0 B68540EE A2DA725B 99B315F3 B8B48991 " +
+                    "8EF109E1 56193951 EC7E937B 1652C0BD 3BB1BF07 3573DF88 3D2C34F1 EF451FD4 " +
+                    "6B503F00",
+            x =
+                "000000C6 858E06B7 0404E9CD 9E3ECB66 2395B442 9C648139 053FB521 F828AF60 " +
+                    "6B4D3DBA A14B5E77 EFE75928 FE1DC127 A2FFA8DE 3348B3C1 856A429B F97E7E31 " +
+                    "C2E5BD66",
+            y =
+                "00000118 39296A78 9A3BC004 5C8A5FB4 2C7D1BD9 98F54449 579B4468 17AFBD17 " +
+                    "273E662C 97EE7299 5EF42640 C550B901 3FAD0761 353C7086 A272C240 88BE9476 " +
+                    "9FD16650",
+            q =
+                "000001FF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF " +
+                    "FFFFFFFA 51868783 BF2F966B 7FCC0148 F709A5D0 3BB5C9B8 899C47AE BB6FB71E " +
+                    "91386409",
+        )
+
+    /** RFC 5114, Appendix A.4: ECDH on secp192r1. */
+    val RFC_5114_A4: KeyAgreement =
+        KeyAgreement(
+            curve = "secp192r1",
+            dA =
+                "323FA316 9D8E9C65 93F59476 BC142000 AB5BE0E2 49C43426",
+            xQA =
+                "CD46489E CFD6C105 E7B3D325 66E2B122 E249ABAA DD870612",
+            yQA =
+                "68887B48 77DF51DD 4DC3D6FD 11F0A26F 8FD38443 17916E9A",
+            dB =
+                "631F95BB 4A67632C 9C476EEE 9AB695AB 240A0499 307FCF62",
+            xQB =
+                "519A1216 80E00454 66BA21DF 2EEE47F5 973B5005 77EF13D5",
+            yQB =
+                "FF613AB4 D64CEE3A 20875BDB 10F953F6 B30CA072 C60AA57F",
+            xZ =
+                "AD420182 633F8526 BFE954AC DA376F05 E5FF4F83 7F54FEBE",
+        )
+
+    /** RFC 5114, Appendix A.5: ECDH on secp224r1. */
+    val RFC_5114_A5: KeyAgreement =
+        KeyAgreement(
+            curve = "secp224r1",
+            dA =
+                "B558EB6C 288DA707 BBB4F8FB AE2AB9E9 CB62E3BC 5C7573E2 2E26D37F",
+            xQA =
+                "49DFEF30 9F81488C 304CFF5A B3EE5A21 54367DC7 833150E0 A51F3EEB",
+            yQA =
+                "4F2B5EE4 5762C4F6 54C1A0C6 7F54CF88 B016B51B CE3D7C22 8D57ADB4",
+            dB =
+                "AC3B1ADD 3D9770E6 F6A708EE 9F3B8E0A B3B480E9 F27F85C8 8B5E6D18",
+            xQB =
+                "6B3AC96A 8D0CDE6A 5599BE80 32EDF10C 162D0A8A D219506D CD42A207",
+            yQB =
+                "D491BE99 C213A7D1 CA3706DE BFE305F3 61AFCBB3 3E2609C8 B1618AD5",
+            xZ =
+                "52272F50 F46F4EDC 91515690 92F46DF2 D96ECC3B 6DC1714A 4EA949FA",
+        )
+
+    /** RFC 5114, Appendix A.6: ECDH on secp256r1. */
+    val RFC_5114_A6: KeyAgreement =
+        KeyAgreement(
+            curve = "secp256r1",
+            dA =
+                "81426414 5F2F56F2 E96A8E33 7A128499 3FAF432A 5ABCE59E 867B7291 D507A3AF",
+            xQA =
+                "2AF502F3 BE8952F2 C9B5A8D4 160D09E9 7165BE50 BC42AE4A 5E8D3B4B A83AEB15",
+            yQA =
+                "EB0FAF4C A986C4D3 8681A0F9 872D79D5 6795BD4B FF6E6DE3 C0F5015E CE5EFD85",
+            dB =
+                "2CE1788E C197E096 DB95A200 CC0AB26A 19CE6BCC AD562B8E EE1B5937 61CF7F41",
+            xQB =
+                "B120DE4A A3649279 5346E8DE 6C2C8646 AE06AAEA 279FA775 B3AB0715 F6CE51B0",
+            yQB =
+                "9F1B7EEC E20D7B5E D8EC685F A3F071D8 37270270 92A84113 85C34DDE 5708B2B6",
+            xZ =
+                "DD0F5396 219D1EA3 93310412 D19A08F1 F5811E9D C8EC8EEA 7F80D21C 820C2788",
+        )
+
+    /** RFC 5114, Appendix A.7: ECDH on secp384r1. */
+    val RFC_5114_A7: KeyAgreement =
+        KeyAgreement(
+            curve = "secp384r1",
+            dA =
+                "D27335EA 71664AF2 44DD14E9 FD126071 5DFD8A79 65571C48 D709EE7A 7962A156 " +
+                    "D706A90C BCB5DF29 86F05FEA DB9376F1",
+            xQA =
+                "793148F1 787634D5 DA4C6D90 74417D05 E057AB62 F82054D1 0EE6B040 3D627954 " +
+                    "7E6A8EA9 D1FD7742 7D016FE2 7A8B8C66",
+            yQA =
+                "C6C41294 331D23E6 F480F4FB 4CD40504 C947392E 94F4C3F0 6B8F398B B29E4236 " +
+                    "8F7A6859 23DE3B67 BACED214 A1A1D128",
+            dB =
+                "52D1791F DB4B70F8 9C0F00D4 56C2F702 3B612526 2C36A7DF 1F802311 21CCE3D3 " +
+                    "9BE52E00 C194A413 2C4A6C76 8BCD94D2",
+            xQB =
+                "5CD42AB9 C41B5347 F74B8D4E FB708B3D 5B36DB65 915359B4 4ABC1764 7B6B9999 " +
+                    "789D72A8 4865AE2F 223F12B5 A1ABC120",
+            yQB =
+                "E171458F EAA939AA A3A8BFAC 46B404BD 8F6D5B34 8C0FA4D8 0CECA163 56CA9332 " +
+                    "40BDE872 3415A8EC E035B0ED F36755DE",
+            xZ =
+                "5EA1FC4A F7256D20 55981B11 0575E0A8 CAE53160 137D904C 59D926EB 1B8456E4 " +
+                    "27AA8A45 40884C37 DE159A58 028ABC0E",
+        )
+
+    /** RFC 5114, Appendix A.8: ECDH on secp521r1. */
+    val RFC_5114_A8: KeyAgreement =
+        KeyAgreement(
+            curve = "secp521r1",
+            dA =
+                "0113F82D A825735E 3D972766 83B2B742 77BAD273 35EA7166 4AF2430C C4F33459 " +
+                    "B9669EE7 8B3FFB9B 8683015D 344DCBFE F6FB9AF4 C6C470BE 254516CD 3C1A1FB4 " +
+                    "7362",
+            xQA =
+                "01EBB34D D75721AB F8ADC9DB ED17889C BB9765D9 0A7C60F2 CEF007BB 0F2B26E1 " +
+                    "4881FD44 42E689D6 1CB2DD04 6EE30E3F FD20F9A4 5BBDF641 3D583A2D BF59924F " +
+                    "D35C",
+            yQA =
+                "00F6B632 D194C038 8E22D843 7E558C55 2AE195AD FD153F92 D7490835 1B2F8C4E " +
+                    "DA94EDB0 916D1B53 C020B5EE CAED1A5F C38A233E 4830587B B2EE3489 B3B42A5A " +
+                    "86A4",
+            dB =
+                "00CEE348 0D8645A1 7D249F27 76D28BAE 616952D1 791FDB4B 70F7C337 8732AA1B " +
+                    "22928448 BCD1DC24 96D435B0 1048066E BE4F7290 3C361B1A 9DC1193D C2C9D089 " +
+                    "1B96",
+            xQB =
+                "010EBFAF C6E85E08 D24BFFFC C1A4511D B0E634BE EB1B6DEC 8C5939AE 44766201 " +
+                    "AF620043 0BA97C8A C6A0E9F0 8B33CE7E 9FEEB5BA 4EE5E0D8 1510C242 95B8A08D " +
+                    "0235",
+            yQB =
+                "00A4A6EC 300DF9E2 57B0372B 5E7ABFEF 09343671 9A77887E BB0B18CF 8099B9F4 " +
+                    "212B6E30 A1419C18 E029D368 63CC9D44 8F4DBA4D 2A0E6071 1BE57291 5FBD4FEF " +
+                    "2695",
+            xZ =
+                "00CDEA89 621CFA46 B132F9E4 CFE2261C DE2D4368 EB565663 4C7CC98C 7A00CDE5 " +
+                    "4ED1866A 0DD3E612 6C9D2F84 5DAFF82C EB1DA08F 5D87521B B0EBECA7 7911169C " +
+                    "20CC",
+        )
+}
