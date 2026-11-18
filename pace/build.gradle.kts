@@ -1,5 +1,14 @@
+import groovy.json.JsonOutput
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import java.net.HttpURLConnection
+import java.net.URI
+import java.net.URLEncoder
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
+import java.util.Base64
+import java.util.UUID
 
 plugins {
     `java-library`
@@ -148,14 +157,17 @@ signing {
     sign(publishing.publications["library"])
 }
 
+// A bundle built with -Ppace.skipSigning has no signatures: it shows what a release contains, and Maven Central
+// refuses it.
 tasks.withType<Sign>().configureEach {
-    val release = isRelease
-    onlyIf("the version is a release version") { release }
+    val signed = isRelease && !providers.gradleProperty("pace.skipSigning").isPresent
+    onlyIf("the version is a release version and signing is not skipped") { signed }
 }
 
-val cleanStaging by tasks.registering(Delete::class) {
-    delete(stagingDirectory)
-}
+val cleanStaging =
+    tasks.register<Delete>("cleanStaging") {
+        delete(stagingDirectory)
+    }
 
 tasks.named("publishLibraryPublicationToStagingRepository") {
     dependsOn(cleanStaging)
@@ -185,4 +197,103 @@ tasks.register<Zip>("centralBundle") {
     exclude("**/maven-metadata.xml*")
     archiveFileName = "pace-$version-bundle.zip"
     destinationDirectory = layout.buildDirectory.dir("central")
+}
+
+// The tasks below call the publisher API of the Maven Central portal with a user token of the portal. The token is
+// given outside the repository, as the Gradle properties mavenCentralUsername and mavenCentralPassword or as the
+// environment variables ORG_GRADLE_PROJECT_mavenCentralUsername and ORG_GRADLE_PROJECT_mavenCentralPassword. It is
+// never printed, and the tasks are kept out of the configuration cache so that it is not stored there.
+val portalApi = "https://central.sonatype.com/api/v1/publisher"
+val portalUsername = providers.gradleProperty("mavenCentralUsername")
+val portalPassword = providers.gradleProperty("mavenCentralPassword")
+
+/** The deployment of the last upload; another one is chosen with the Gradle property pace.deploymentId. */
+val deploymentIdFile = layout.buildDirectory.file("central/deployment-id.txt")
+val deploymentIdProperty = providers.gradleProperty("pace.deploymentId")
+
+fun portalRequest(path: String): HttpRequest.Builder {
+    check(portalUsername.isPresent && portalPassword.isPresent) {
+        "The portal's user token is missing: set the Gradle properties mavenCentralUsername and mavenCentralPassword."
+    }
+    val token = Base64.getEncoder().encodeToString("${portalUsername.get()}:${portalPassword.get()}".toByteArray())
+    return HttpRequest.newBuilder(URI.create(portalApi + path)).header("Authorization", "Bearer $token")
+}
+
+fun sendToPortal(request: HttpRequest, expectedStatus: Int): String {
+    val response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString())
+    check(response.statusCode() == expectedStatus) {
+        "The portal answered ${response.statusCode()} instead of $expectedStatus: ${response.body()}"
+    }
+    return response.body()
+}
+
+fun deploymentId(): String {
+    val file = deploymentIdFile.get().asFile
+    check(deploymentIdProperty.isPresent || file.exists()) {
+        "No deployment is known: run centralUpload first, or name one with -Ppace.deploymentId=<id>."
+    }
+    return deploymentIdProperty.orNull ?: file.readText().trim()
+}
+
+tasks.register("centralUpload") {
+    group = "publishing"
+    description = "Uploads the bundle to the Maven Central portal, where it is validated but not published."
+    notCompatibleWithConfigurationCache("uses the portal's user token")
+
+    val bundle = tasks.named<Zip>("centralBundle").flatMap { it.archiveFile }
+    inputs.file(bundle)
+    doLast {
+        val file = bundle.get().asFile
+        val boundary = "bundle-" + UUID.randomUUID()
+        val head =
+            "--$boundary\r\n" +
+                "Content-Disposition: form-data; name=\"bundle\"; filename=\"${file.name}\"\r\n" +
+                "Content-Type: application/octet-stream\r\n\r\n"
+        val body = head.toByteArray() + file.readBytes() + "\r\n--$boundary--\r\n".toByteArray()
+        val name = URLEncoder.encode(file.nameWithoutExtension, Charsets.UTF_8)
+        val request =
+            portalRequest("/upload?name=$name&publishingType=USER_MANAGED")
+                .header("Content-Type", "multipart/form-data; boundary=$boundary")
+                .POST(HttpRequest.BodyPublishers.ofByteArray(body))
+                .build()
+        val id = sendToPortal(request, HttpURLConnection.HTTP_CREATED).trim()
+        deploymentIdFile.get().asFile.writeText(id)
+        logger.lifecycle("Uploaded ${file.name} as deployment $id. Check it with centralStatus.")
+    }
+}
+
+tasks.register("centralStatus") {
+    group = "publishing"
+    description = "Shows the state of the uploaded deployment and, if its validation failed, the reasons."
+    notCompatibleWithConfigurationCache("uses the portal's user token")
+
+    doLast {
+        val request = portalRequest("/status?id=${deploymentId()}").POST(HttpRequest.BodyPublishers.noBody()).build()
+        logger.lifecycle(JsonOutput.prettyPrint(sendToPortal(request, HttpURLConnection.HTTP_OK)))
+    }
+}
+
+tasks.register("centralPublish") {
+    group = "publishing"
+    description = "Publishes the validated deployment to Maven Central. This cannot be undone."
+    notCompatibleWithConfigurationCache("uses the portal's user token")
+
+    doLast {
+        val id = deploymentId()
+        val request = portalRequest("/deployment/$id").POST(HttpRequest.BodyPublishers.noBody()).build()
+        sendToPortal(request, HttpURLConnection.HTTP_NO_CONTENT)
+        logger.lifecycle("Deployment $id is being published. Follow it with centralStatus.")
+    }
+}
+
+tasks.register("centralDrop") {
+    group = "publishing"
+    description = "Drops the deployment, validated or failed, without publishing it."
+    notCompatibleWithConfigurationCache("uses the portal's user token")
+
+    doLast {
+        val id = deploymentId()
+        sendToPortal(portalRequest("/deployment/$id").DELETE().build(), HttpURLConnection.HTTP_NO_CONTENT)
+        logger.lifecycle("Deployment $id is dropped.")
+    }
 }
